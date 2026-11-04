@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Морской бой и Telegram-боты BMWshnik.">
+  <meta name="theme-color" content="#181a1e">
+  <title>Проекты by BMWshnik</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23181a1e' d='M0 0h64v64H0z'/%3E%3Cpath fill='%23ff6b55' d='M7 46 24 18h8L15 46zm13 0 17-28h8L28 46zm13 0 17-28h8L41 46z'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #181a1e;
+      --text: #f4f1e9;
+      --dim: #b8b7b2;
+      --line: #3f4147;
+      --red: #ff6b55;
+      --ink: #241a19;
+      --mono: ui-monospace, "Cascadia Code", "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    h1, h2, p { margin: 0; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--text); outline-offset: 5px; }
+    svg { display: block; }
+
+    .wrap { width: min(880px, calc(100% - 64px)); margin-inline: auto; }
+    .masthead {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      border-top: 1px solid var(--line);
+      margin-top: 48px;
+      padding: 22px 0 28px;
+    }
+
+    h1 {
+      font-size: clamp(58px, 10vw, 103px);
+      font-weight: 810;
+      line-height: .92;
+      letter-spacing: -.085em;
+    }
+
+    .signature {
+      display: block;
+      margin-top: 12px;
+      color: var(--red);
+      font-size: clamp(19px, 3.6vw, 32px);
+      font-weight: 650;
+      line-height: 1.2;
+      letter-spacing: -.045em;
+    }
+
+    .signature i { font-weight: 480; }
+    .mark { flex: 0 0 auto; width: clamp(48px, 12vw, 110px); margin-bottom: 5px; color: var(--red); }
+
+    .feature {
+      --cut: 21px;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.04fr .96fr;
+      min-height: 276px;
+      isolation: isolate;
+      color: var(--ink);
+    }
+
+    .feature::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--red);
+      clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+    }
+
+    .feature-copy { padding: 28px 0 27px 28px; display: flex; flex-direction: column; align-items: start; }
+    .feature h2 {
+      font-size: clamp(32px, 6.7vw, 63px);
+      font-weight: 800;
+      line-height: .97;
+      letter-spacing: -.07em;
+    }
+
+    .feature p { margin-top: 12px; max-width: 29ch; }
+    .feature-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid currentColor;
+      padding-block: 2px 3px;
+      margin-top: 20px;
+      font-size: 14px;
+      font-weight: 720;
+    }
+
+    .arrow { width: 17px; height: 17px; transition: transform 180ms ease; }
+
+    .feature-art {
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+    }
+
+    .feature-art svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transition: transform 280ms ease;
+    }
+
+    .bots { margin-top: 33px; }
+    .bots h2 {
+      padding-bottom: 10px;
+      font-size: 23px;
+      font-weight: 720;
+      letter-spacing: -.035em;
+    }
+
+    .bot-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .bot {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 15px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      padding: 13px 2px;
+      transition: background-color 160ms ease;
+    }
+
+    .bot-icon {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--tile);
+      color: #212127;
+    }
+
+    .bot-icon svg { width: 26px; height: 26px; }
+    .media { --tile: #d2c4f4; }
+    .tracker { --tile: #bad8b4; }
+    .weather { --tile: #f6d08a; }
+
+    .bot-copy { min-width: 0; }
+    .bot-name {
+      display: block;
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1.2;
+    }
+
+    .bot-description { display: block; color: var(--dim); font-size: 14px; margin-top: 3px; }
+    .handle { display: block; color: var(--dim); font: 11px/1.45 var(--mono); overflow-wrap: anywhere; margin-top: 3px; }
+    .bot > .arrow { color: var(--red); margin-right: 5px; }
+
+    .vpn {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 16px 2px 27px;
+      color: var(--dim);
+      font-size: 13px;
+    }
+
+    .vpn svg { flex: 0 0 16px; width: 16px; height: 16px; margin-top: 1px; color: var(--red); }
+
+    @media (hover: hover) {
+      .feature:hover .feature-art svg { transform: scale(1.05) translateX(-3px); }
+      .feature:hover .arrow, .bot:hover > .arrow { transform: translate(2px, -2px); }
+      .bot:hover { background-color: #ffffff08; }
+      .bot:hover .bot-name { color: var(--red); }
+    }
+
+    @media (max-width: 540px) {
+      .wrap { width: calc(100% - 36px); }
+      .masthead { margin-top: 22px; padding: 16px 0 19px; }
+      h1 { font-size: clamp(51px, 13vw, 66px); }
+      .signature { margin-top: 8px; }
+      .feature { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); min-height: 183px; --cut: 14px; }
+      .feature-copy { padding: 17px 0 16px 15px; }
+      .feature h2 { max-width: 8ch; font-size: clamp(29px, 8.5vw, 42px); }
+      .feature p { font-size: 13px; margin-top: 8px; }
+      .feature-cta { margin-top: auto; padding-top: 10px; }
+      .bots { margin-top: 22px; }
+      .bots h2 { padding-bottom: 8px; font-size: 21px; }
+      .bot { gap: 10px; padding: 11px 1px; }
+      .bot-icon { width: 40px; height: 40px; border-radius: 8px; }
+      .bot-icon svg { width: 22px; height: 22px; }
+      .bot-name { font-size: 17px; }
+      .bot-description { font-size: 13px; }
+      .bot > .arrow { margin-right: 2px; }
+    }
+
+    @media (max-width: 350px) {
+      .wrap { width: calc(100% - 28px); }
+      .masthead { gap: 9px; }
+      h1 { font-size: 47px; }
+      .feature { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+      .bot { gap: 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="out" viewBox="0 0 24 24">
+      <path d="M6 18 18 6M8 6h10v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
+
+  <main class="wrap">
+    <header class="masthead">
+      <h1>Проекты <span class="signature"><i>by</i> BMWshnik</span></h1>
+      <svg class="mark" viewBox="0 0 110 58" fill="currentColor" aria-hidden="true">
+        <path d="M0 57 32 1h15L15 57zm25 0L57 1h15L40 57z" opacity=".35"/>
+        <path d="M50 57 82 1h15L65 57z"/>
+      </svg>
+    </header>
+
+    <a class="feature" href="https://qwerredesw.github.io/morskoy-boy/" aria-labelledby="game-name" aria-describedby="game-description">
+      <div class="feature-copy">
+        <h2 id="game-name">Морской бой</h2>
+        <p id="game-description">В клетчатой тетради. Против бота или вдвоём на одном устройстве.</p>
+        <span class="feature-cta" aria-hidden="true">Играть <svg class="arrow"><use href="#out"/></svg></span>
+      </div>
+      <div class="feature-art" aria-hidden="true">
+        <svg viewBox="0 0 335 260" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="paper-grid" width="15" height="15" patternUnits="userSpaceOnUse">
+              <path d="M15 0H0v15" fill="none" stroke="#abb6ca" stroke-width="1"/>
+            </pattern>
+            <pattern id="pen-fill" width="6" height="6" patternUnits="userSpaceOnUse">
+              <path d="M-1 1 1-1m-1 7 6-6m-1 7 2-2" stroke="#3d569a" stroke-width="1.4"/>
+            </pattern>
+          </defs>
+          <g transform="translate(39 15) rotate(-10 132 118)">
+            <path d="M24 20h239v226H24z" fill="#652a26" opacity=".44" transform="translate(9 9)"/>
+            <path d="M15 13h250v226H15z" fill="#e1c8ac" transform="rotate(6 143 123)"/>
+            <path d="M15 13h250v226H15z" fill="#f6ead4"/>
+            <path d="M15 13h250v226H15z" fill="url(#paper-grid)"/>
+            <path d="M34 13v226" stroke="#ca6c62" stroke-width="1.4"/>
+            <g stroke="#314883" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m64 60 150 1 1 150-151-1z" fill="none" stroke-width="2.1"/>
+              <path d="M79 61v149m15-149v149m15-149v149m15-149v149m15-149v149m15-149v149m15-149v149m15-149v149m15-149v149M64 76h150M64 91h150M64 106h150M64 121h150M64 136h150M64 151h150M64 166h150M64 181h150M64 196h150" fill="none" opacity=".73"/>
+              <path d="m80 92 59-1-.3 15-59 .3zm89 45 15-1-.2 46-14-.3zm-59 44 14 .5v15l-15-.4z" fill="url(#pen-fill)" stroke-width="2"/>
+              <path d="m157 79 8 8m-8 0 8-8m-37 45 8 8m-8 0 8-8m67 31 8 8m-8 0 8-8m-142 13 7 8m-7 0 7-8" fill="none" stroke-width="2"/>
+              <path d="M85 128h2m74-14h2m30 9h2m-103 32h2m44 36h2m-70-79h2" stroke-width="2.8"/>
+            </g>
+            <g fill="#314883" font-size="10" font-family="monospace">
+              <text x="68" y="53" letter-spacing="9">АБВГДЕЖЗИК</text>
+              <text x="51" y="72">1</text><text x="51" y="87">2</text><text x="51" y="102">3</text>
+              <text x="51" y="117">4</text><text x="51" y="132">5</text><text x="51" y="147">6</text>
+              <text x="51" y="162">7</text><text x="51" y="177">8</text><text x="51" y="192">9</text><text x="45" y="207">10</text>
+            </g>
+            <path d="M218 112c16-1 25-7 28-18m-8 4 8-5 3 8" fill="none" stroke="#314883" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M65 225c27-3 57-3 89-1m-59 5c15-2 29-2 38-2" fill="none" stroke="#314883" stroke-width="1.2" opacity=".7"/>
+          </g>
+        </svg>
+      </div>
+    </a>
+
+    <section class="bots" aria-labelledby="bots-title">
+      <h2 id="bots-title">Telegram-боты</h2>
+      <ul class="bot-list">
+        <li>
+          <a class="bot media" href="https://t.me/Media_NAKOVALNIA_Bot" aria-labelledby="media-name" aria-describedby="media-description">
+            <span class="bot-icon" aria-hidden="true">
+              <svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 17H4V6h18v11h-4M13 12v10m-3-3 3 3 3-3M8 10h3"/>
+              </svg>
+            </span>
+            <span class="bot-copy">
+              <span class="bot-name" id="media-name">Медиа Наковальня</span>
+              <span class="bot-description" id="media-description">Скачивает видео с YouTube по ссылке.</span>
+              <span class="handle">@Media_NAKOVALNIA_Bot</span>
+            </span>
+            <svg class="arrow" aria-hidden="true"><use href="#out"/></svg>
+          </a>
+        </li>
+        <li>
+          <a class="bot tracker" href="https://t.me/MySubscriptionTracker_bot" aria-labelledby="tracker-name" aria-describedby="tracker-description">
+            <span class="bot-icon" aria-hidden="true">
+              <svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4.5" y="6" width="17" height="15" rx="2"/>
+                <path d="M9 4v4m8-4v4M5 10h16m-12 5 2 2 4-4"/>
+              </svg>
+            </span>
+            <span class="bot-copy">
+              <span class="bot-name" id="tracker-name">Трекер подписок</span>
+              <span class="bot-description" id="tracker-description">Список подписок и даты продления.</span>
+              <span class="handle">@MySubscriptionTracker_bot</span>
+            </span>
+            <svg class="arrow" aria-hidden="true"><use href="#out"/></svg>
+          </a>
+        </li>
+        <li>
+          <a class="bot weather" href="https://t.me/WeatherGoodMorningBot" aria-labelledby="weather-name" aria-describedby="weather-description">
+            <span class="bot-icon" aria-hidden="true">
+              <svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 17a6 6 0 0 1 12 0M4 18h18M8 22h10M13 4v3M5 8l2 2m14-2-2 2"/>
+              </svg>
+            </span>
+            <span class="bot-copy">
+              <span class="bot-name" id="weather-name">Погода с утра</span>
+              <span class="bot-description" id="weather-description">Присылает прогноз погоды по утрам.</span>
+              <span class="handle">@WeatherGoodMorningBot</span>
+            </span>
+            <svg class="arrow" aria-hidden="true"><use href="#out"/></svg>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <aside class="vpn" aria-label="VPN">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/>
+      </svg>
+      <p>Есть ещё свой VPN. Ссылку не дам (ркн иди нахуй).</p>
+    </aside>
+  </main>
+</body>
+</html>
